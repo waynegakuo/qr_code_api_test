@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="qr_test.css">
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+        }
+    </script>
+
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container justify-content-center">
+        <div class="mx-auto text-center form p-4">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="img">
+                            <img src="mslogo.png" class="center" alt="">
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="link">Let's Create a QR Code for you!</label>
+                                <input type="text" class="form-control" id="link" placeholder="Paste your link here">
+                            </div>
+                            <div class="buttonHolder">
+                                <input type="button" id="submit" name="submit" class="btn btn-primary" value="Submit">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="email">Your QR Code Image will appear here!</label>
+                            <!-- <div id="link_resp">
+                            </div> -->
+                            <div id="link_resp">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function () {
+        $("#submit").on('click', function (e) {
+            e.preventDefault();
+            var link = document.getElementById("link").value
+            var fr = new FileReader();
+
+            if (link != "") {
+                $("#submit").attr("disabled", true);
+
+                $.ajax({
+                    url: "https://api.qrserver.com/v1/create-qr-code",
+                    type: "get", //send it through get method
+                    data: {
+                        data: link,
+                    },
+                    success: function (response) {
+                        var linkRes = 'http(s)://api.qrserver.com/v1/read-qr-code/?fileurl="'+response+'"';
+                        console.log(linkRes);
+                        
+                        // $("#imgalign").append('<img src="' + response + '" />');
+                        // $('.div_imagetranscrits').html('<img src="data:image/png;base64,' + response + '" />');
+                        // var htmlImage = $('<img src="' + fr.response + '" style="width:100%"/>').appendTo('div#link_resp');
+                        // // $('#link_resp').text('name : ' + response);
+                        // $('#link_resp').show();
+                        // fr.readAsDataURL(file);
+
+                        // alert(response)
+                        // self.location.href = 'qr_test.html';
+                        //Do Something
+                    },
+                    error: function (xhr) {
+                        alert("Error")
+                        //Do Something to handle error
+                    }
+                });
+
+                // $.post("https://api.qrserver.com/v1/create-qr-code/",
+                //     {
+                //         data: data,
+                //     },
+                //     function (data, status) {
+                //         console.log("printing success", data);
+                //         if (data == 'Successful Registration') {
+                //             alert("Thank you for registering with Moringa School")
+                //             self.location.href = 'index.html';
+                //         }
+                //         else {
+                //             alert("Error",data);
+                //         }
+                //     });
+            }
+            else {
+                alert("Kindly fill in the fields");
+            }
+        })
+    });
+</script>
+
+</html>
